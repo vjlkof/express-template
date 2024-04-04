@@ -22,4 +22,9 @@ export default tseslint.config(
     files: ["dist/**", "**/*.js", "**/*.cjs", "dist/*.js", "*.js", "*.cjs"],
     ...tseslint.configs.disableTypeChecked,
   },
+  {
+    rules: {
+      "@typescript-eslint/no-non-null-assertion": "off",
+    },
+  },
 );
