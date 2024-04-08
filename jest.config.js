@@ -3,6 +3,8 @@ export default {
   preset: "ts-jest",
   testEnvironment: "node",
   roots: ["<rootDir>/src/"],
-  // collectCoverage: true,
-  // coverageReporters: ["json", "html"],
+  verbose: true,
+  collectCoverage: true,
+  coverageReporters: ["html", "text"],
+  coverageDirectory: "coverage",
 };

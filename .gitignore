@@ -11,3 +11,7 @@ lerna-debug.log*
 node_modules/
 jspm_packages/
 dist
+coverage
+
+# Environment variables
+.env

@@ -3,6 +3,7 @@ import app from "../../app.ts";
 import { StatusCodes } from "http-status-codes";
 import { User } from "../../schemas/users.schema.ts";
 import userList from "../../../mockData/users.ts";
+import { UsersServices } from "../../services/users.service.ts";
 
 const requiredFields = ["id", "name", "lastName", "email", "birthDate"];
 const mockedUser = {
@@ -17,6 +18,14 @@ const mockedUserWithWrongData = {
   birthDate: "2024-12-12",
 };
 
+afterEach(() => {
+  jest.spyOn(UsersServices, "getData").mockRestore();
+  jest.spyOn(UsersServices, "getOneData").mockRestore();
+  jest.spyOn(UsersServices, "createOne").mockRestore();
+  jest.spyOn(UsersServices, "updateOne").mockRestore();
+  jest.spyOn(UsersServices, "deleteOne").mockRestore();
+});
+
 describe("GET wrong path /notfound", function () {
   test("should respond with not found page", async () => {
     const response = await request(app).get("/notfound");
@@ -25,6 +34,13 @@ describe("GET wrong path /notfound", function () {
 });
 
 describe("GET path /users", function () {
+  test("should handle error in get", async () => {
+    jest
+      .spyOn(UsersServices, "getData")
+      .mockRejectedValue(new Error("Test error"));
+    const response = await request(app).get("/users");
+    expect(response.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+  });
   test("should respond with status code 200", async () => {
     const response = await request(app).get("/users");
     expect(response.status).toEqual(StatusCodes.OK);
@@ -58,6 +74,15 @@ describe("GET path /users", function () {
 });
 
 describe("GET path /users/:id", function () {
+  test("should handle error in getOne", async () => {
+    jest
+      .spyOn(UsersServices, "getOneData")
+      .mockRejectedValue(new Error("Test error"));
+    const response = await request(app).get(
+      "/users/cb8e7129-ce80-4cc1-8351-11a2d7350cd3",
+    );
+    expect(response.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+  });
   describe("With invalid or unexisting id", function () {
     test("should respond with status code 400", async () => {
       const response = await request(app).get("/users/999999");
@@ -106,6 +131,13 @@ describe("GET path /users/:id", function () {
 });
 
 describe("POST path /users", function () {
+  test("should handle error in POST", async () => {
+    jest
+      .spyOn(UsersServices, "createOne")
+      .mockRejectedValue(new Error("Test error"));
+    const response = await request(app).post("/users").send(mockedUser);
+    expect(response.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+  });
   describe("With invalid data", function () {
     test("should respond with status code 400", async () => {
       const response = await request(app)
@@ -142,6 +174,15 @@ describe("POST path /users", function () {
 });
 
 describe("PUT path /users", function () {
+  test("should handle error in PUT and give status code 500", async () => {
+    jest
+      .spyOn(UsersServices, "updateOne")
+      .mockRejectedValue(new Error("Test error"));
+    const response = await request(app)
+      .put("/users/cb8e7129-ce80-4cc1-8351-11a2d7350cd3")
+      .send(mockedUser);
+    expect(response.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+  });
   describe("With invalid or unexisting id", function () {
     test("should respond with status code 400, wrong ID", async () => {
       const response = await request(app).put("/users/999999");
@@ -197,6 +238,15 @@ describe("PUT path /users", function () {
 });
 
 describe("DELETE path /users", function () {
+  test("should handle error in DELETE and give status code 500", async () => {
+    jest
+      .spyOn(UsersServices, "deleteOne")
+      .mockRejectedValue(new Error("Test error"));
+    const response = await request(app).delete(
+      "/users/cb8e7129-ce80-4cc1-8351-11a2d7350cd3",
+    );
+    expect(response.status).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+  });
   describe("With invalid or unexisting id", function () {
     test("should respond with status code 400, wrong ID", async () => {
       const response = await request(app).delete("/users/999999");
