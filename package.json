@@ -14,7 +14,7 @@
     "prod:without:dotenv": "node  --env-file .env dist/index.js",
     "pm2:prod:without:dotenv": "npx pm2 start ecosystem.config.cjs --env production",
     "build": "tsc",
-    "start": "tsx src/index.ts",
+    "start": "tsx dist/src/index.js",
     "dev": "tsx watch src/index.ts",
     "pm2:prod": "npx pm2 start ecosystem.config.cjs",
     "monitor": "npx pm2 monit",

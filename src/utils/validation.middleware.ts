@@ -8,7 +8,7 @@ export default function validationMiddleware(
   return function (req: Request, res: Response, next: NextFunction): void {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const result = schema.safeParse({ params: req.params, body: req.body });
-    if (!result.success) {
+    if (result.success === false) {
       const errorFormatted = result.error.format();
       res.status(StatusCodes.BAD_REQUEST).json(errorFormatted);
     } else {

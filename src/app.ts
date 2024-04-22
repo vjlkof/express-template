@@ -1,7 +1,7 @@
 import express from "express";
-import router from "./routes/index.route.ts";
-import loggerMiddleware from "./utils/logger.ts";
-import errorMiddleware from "./utils/errorMiddleware.ts";
+import router from "./routes/index.route.js";
+import loggerMiddleware from "./utils/logger.js";
+import errorMiddleware from "./utils/errorMiddleware.js";
 import helmet from "helmet";
 
 const app = express();

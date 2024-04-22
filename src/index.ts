@@ -1,6 +1,6 @@
 import "dotenv/config";
-import app from "./app.ts";
-import { logger } from "./utils/logger.ts";
+import app from "./app.js";
+import { logger } from "./utils/logger.js";
 
 const PORT = process.env.PORT ?? 3000;
 

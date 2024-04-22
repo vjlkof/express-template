@@ -7,4 +7,12 @@ export default {
   collectCoverage: true,
   coverageReporters: ["html", "text"],
   coverageDirectory: "coverage",
+  coverageThreshold: {
+    global: {
+      branches: 85,
+      functions: 85,
+      lines: 85,
+      statements: 85,
+    },
+  },
 };

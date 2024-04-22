@@ -1,4 +1,4 @@
-import { User } from "../src/schemas/users.schema.ts";
+import { User } from "../src/schemas/users.schema.js";
 const userList: User[] = [
   {
     id: "cb8e7129-ce80-4cc1-8351-11a2d7350cd3",

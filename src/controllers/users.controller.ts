@@ -1,7 +1,7 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { UsersServices } from "../services/users.service.ts";
+import { UsersServices } from "../services/users.service.js";
 import { StatusCodes } from "http-status-codes";
-import { User } from "../schemas/users.schema.ts";
+import { User } from "../schemas/users.schema.js";
 
 export async function get(
   req: Request,

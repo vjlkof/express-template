@@ -1,6 +1,6 @@
 import { Router } from "express";
-import routerUsers from "./users.route.ts";
-import { HomeController } from "../controllers/home.controller.ts";
+import routerUsers from "./users.route.js";
+import { HomeController } from "../controllers/home.controller.js";
 
 const router = Router();
 

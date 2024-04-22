@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
-import { User } from "../schemas/users.schema.ts";
-import userList from "../../mockData/users.ts";
+import { User } from "../schemas/users.schema.js";
+import userList from "../../mockData/users.js";
 
 interface Result {
   data: User[] | User | string | null;
