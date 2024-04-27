@@ -11,6 +11,9 @@ export default tseslint.config(
   ...tseslint.configs.stylisticTypeChecked,
   prettierConfig,
   {
+    ignores: ["bin/*"],
+  },
+  {
     languageOptions: {
       parserOptions: {
         project: true,

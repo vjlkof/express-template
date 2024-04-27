@@ -8,13 +8,17 @@
     "node": "20.11.1",
     "npm": "10.2.4"
   },
+  "preferGlobal": true,
+  "bin": {
+    "express-template-ts": "./bin/express-cli.js"
+  },
   "scripts": {
-    "start:without:dotenv": "tsx --env-file .env src/index.ts",
+    "start:without:dotenv": "node --env-file .env dist/src/index.js",
     "dev:without:dotenv": "tsx watch --env-file .env src",
     "prod:without:dotenv": "node  --env-file .env dist/index.js",
     "pm2:prod:without:dotenv": "npx pm2 start ecosystem.config.cjs --env production",
     "build": "tsc",
-    "start": "tsx dist/src/index.js",
+    "start": "node dist/src/index.js",
     "dev": "tsx watch src/index.ts",
     "pm2:prod": "npx pm2 start ecosystem.config.cjs",
     "monitor": "npx pm2 monit",
@@ -27,24 +31,37 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "framework",
+    "web",
+    "rest",
+    "restful",
+    "template",
+    "router",
+    "app",
+    "api",
+    "full"
+  ],
+  "author": "vjlkof",
   "license": "MIT License",
   "dependencies": {
+    "commander": "^12.0.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
     "helmet": "^7.1.0",
     "http-status-codes": "^2.3.0",
+    "sorted-object": "^2.0.1",
     "uuid": "^9.0.1",
     "winston": "^3.12.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.8",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.30",
     "@types/supertest": "^6.0.2",
+    "@types/uuid": "^9.0.8",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "husky": "^9.0.11",
