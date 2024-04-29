@@ -43,6 +43,14 @@ $ npx express-template-typescript myprojectName
 
 ## Quick Start
 
+initialize as a git repository:
+
+```bash
+$ git init
+```
+
+Change npmignore to gitignore.
+
 Install dependencies:
 
 ```bash
