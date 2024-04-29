@@ -2,6 +2,9 @@
 export default {
   preset: "ts-jest",
   testEnvironment: "node",
+  moduleNameMapper: {
+    "^(\\.\\.?\\/.+)\\.jsx?$": "$1",
+  },
   roots: ["<rootDir>/src/"],
   verbose: true,
   collectCoverage: true,

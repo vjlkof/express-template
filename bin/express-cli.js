@@ -9,13 +9,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const TEMPLATE_DIR = path.join(__dirname, "..");
 const MODE_0666 = parseInt("0666", 8);
-// const { version } = import("../package.json");
-// const VERSION = version;
+const VERSION = "1.0.0";
 
 const program = new Command();
 program
   .name("create-express-template-ts")
-  .version("1.0.0")
+  .version(VERSION)
   .helpOption("-h, --help", "Display help for command")
   .arguments("[Project-Name]", "Project name")
   .action((projectName) => {
@@ -28,22 +27,14 @@ program
     if (!createdDirectory) {
       return;
     }
-    try {
-      createApplication(createdDirectory, createdDirectory);
-      showNextSteps(createdDirectory);
-    } catch (err) {
-      console.error("Something wrong happened while creating the template.");
+
+    const result = createApplication(createdDirectory, createdDirectory);
+    if (result) {
+      showNextSteps(createdDirectory, createdDirectory);
     }
   });
 
 program.parse(process.argv);
-/**
- * Display the version.
- */
-
-// function version() {
-//   console.log(VERSION);
-// }
 
 /**
  * Show next steps to the user
@@ -54,7 +45,7 @@ program.parse(process.argv);
  */
 
 function showNextSteps(name, dir) {
-  console.log("ProjectProject name: " + dir);
+  console.log("Project name: " + name);
   const prompt = launchedFromCmd() ? ">" : "$";
 
   if (dir !== ".") {
@@ -144,33 +135,41 @@ function createApplication(name, dir) {
     },
   };
 
-  pkg.dependencies = sortedObject(pkg.dependencies);
+  try {
+    pkg.dependencies = sortedObject(pkg.dependencies);
 
-  fs.mkdirSync(dir + "/src");
-  fs.mkdirSync(dir + "/src/controllers");
-  fs.mkdirSync(dir + "/src/controllers/__Test__");
-  fs.mkdirSync(dir + "/src/routes");
-  fs.mkdirSync(dir + "/src/schemas");
-  fs.mkdirSync(dir + "/src/services");
-  fs.mkdirSync(dir + "/src/utils");
-  fs.mkdirSync(dir + "/mockData");
+    fs.mkdirSync(dir + "/src");
+    fs.mkdirSync(dir + "/src/controllers");
+    fs.mkdirSync(dir + "/src/controllers/__Test__");
+    fs.mkdirSync(dir + "/src/routes");
+    fs.mkdirSync(dir + "/src/schemas");
+    fs.mkdirSync(dir + "/src/services");
+    fs.mkdirSync(dir + "/src/utils");
+    fs.mkdirSync(dir + "/mockData");
+    fs.mkdirSync(dir + "/.husky");
 
-  copyTemplateMulti(".", dir);
-  copyTemplateMulti("src", dir + "/src");
-  copyTemplateMulti("src/controllers", dir + "/src/controllers");
-  copyTemplateMulti(
-    "src/controllers/__Test__",
-    dir + "/src/controllers/__Test__",
-  );
-  copyTemplateMulti("src/routes", dir + "/src/routes");
-  copyTemplateMulti("src/schemas", dir + "/src/schemas");
-  copyTemplateMulti("src/services", dir + "/src/services");
-  copyTemplateMulti("src/utils", dir + "/src/utils");
-  copyTemplateMulti("mockData", dir + "/mockData");
+    copyTemplateMulti(".", dir);
+    copyTemplateMulti("src", dir + "/src");
+    copyTemplateMulti("src/controllers", dir + "/src/controllers");
+    copyTemplateMulti(
+      "src/controllers/__Test__",
+      dir + "/src/controllers/__Test__",
+    );
+    copyTemplateMulti("src/routes", dir + "/src/routes");
+    copyTemplateMulti("src/schemas", dir + "/src/schemas");
+    copyTemplateMulti("src/services", dir + "/src/services");
+    copyTemplateMulti("src/utils", dir + "/src/utils");
+    copyTemplateMulti("mockData", dir + "/mockData");
+    copyTemplateMulti(".husky", dir + "/.husky");
 
-  write(path.join(dir, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
+    write(path.join(dir, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
 
-  console.log("Template generated successfully");
+    console.log("Template generated successfully");
+    return true;
+  } catch (err) {
+    console.error("Something wrong happened while creating the template.", err);
+    return false;
+  }
 }
 
 /**
@@ -195,6 +194,7 @@ function createAppName(pathName) {
 
 function createDirectory(projectName) {
   // Create the project directory
+  console.log("createDirectory");
   const validatedDirectory = createAppName(path.resolve(projectName));
 
   if (fs.existsSync(projectName)) {
@@ -206,7 +206,7 @@ function createDirectory(projectName) {
     fs.mkdirSync(validatedDirectory);
     console.log(`The directory ${validatedDirectory} was created`);
     return validatedDirectory;
-  } catch (e) {
+  } catch (err) {
     console.error(
       `Something wrong happened. Please check the projectName and try again`,
     );
@@ -222,7 +222,7 @@ function isFile(pathName) {
     }
     return false;
   } catch (err) {
-    console.error("Error something wrong happened:", err);
+    console.error("Error something wrong happened.");
     return false;
   }
 }
@@ -235,7 +235,7 @@ function isDirectory(pathName) {
     }
     return false;
   } catch (err) {
-    console.error("Error something wrong happened:", err);
+    console.error("Error something wrong happened.");
     return false;
   }
 }
@@ -257,8 +257,7 @@ function write(file, str, mode) {
  */
 
 function copyTemplate(from, to) {
-  if (isFile(from)) {
-    console.log("from:, " + from + "to: ", to);
+  if (isFile(path.join(TEMPLATE_DIR, from))) {
     write(to, fs.readFileSync(path.join(TEMPLATE_DIR, from), "utf-8"));
   }
 }
@@ -274,74 +273,9 @@ function copyTemplateMulti(fromDir, toDir) {
 }
 
 /**
- * Check if the given directory `dir` is empty.
- *
- * @param {String} dir
- * @param {Function} fn
- */
-
-function emptyDirectory(dir, fn) {
-  fs.readdir(dir, function (err, files) {
-    if (err && err.code !== "ENOENT") throw err;
-    fn(!files || !files.length);
-  });
-}
-
-/**
- * Display an error.
- *
- * @param {String} message
- */
-
-function error(message) {
-  console.error();
-  message.split("\n").forEach(function (line) {
-    console.error("  error: %s", line);
-  });
-  console.error();
-}
-
-/**
  * Determine if launched from cmd.exe
  */
 
 function launchedFromCmd() {
   return process.platform === "win32" && process.env._ === undefined;
 }
-
-/**
- * Load template file.
- */
-
-function loadTemplate(name) {
-  var contents = fs.readFileSync(
-    path.join(__dirname, "..", "templates", name + ".ejs"),
-    "utf-8",
-  );
-  var locals = Object.create(null);
-
-  function render() {
-    return ejs.render(contents, locals, {
-      escape: util.inspect,
-    });
-  }
-
-  return {
-    locals: locals,
-    render: render,
-  };
-}
-
-/**
- * Make the given dir relative to base.
- *
- * @param {string} base
- * @param {string} dir
- */
-
-// function mkdir(base, dir) {
-//   var loc = path.join(base, dir);
-
-//   console.log("   \x1b[36mcreate\x1b[0m : " + loc + path.sep);
-//   mkdirp.sync(loc, MODE_0755);
-// }

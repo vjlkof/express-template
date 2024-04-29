@@ -1,16 +1,16 @@
 {
-  "name": "express-template-view",
+  "name": "express-template-typescript",
   "version": "1.0.0",
-  "description": "This is a template for node with express",
+  "description": "This is a template for node with express + typescript + testing",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
   "engines": {
     "node": "20.11.1",
     "npm": "10.2.4"
   },
   "preferGlobal": true,
   "bin": {
-    "express-template-ts": "./bin/express-cli.js"
+    "express-template-typescript": "./bin/express-cli.js"
   },
   "scripts": {
     "start:without:dotenv": "node --env-file .env dist/src/index.js",
@@ -31,6 +31,20 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
+  "files": [
+    ".prettierrc",
+    ".gitignore",
+    "env-example.txt",
+    "eslint.config.js",
+    "jest.config.js",
+    "LICENSE",
+    "README.md",
+    "tsconfig.json",
+    ".husky/*",
+    "mockData/*",
+    "src/*",
+    "bin/*"
+  ],
   "keywords": [
     "express",
     "framework",
@@ -45,6 +59,8 @@
   ],
   "author": "vjlkof",
   "license": "MIT License",
+  "repository": "https://github.com/vjlkof/express-typescript-template.git",
+  "homepage": "https://github.com/vjlkof/express-typescript-template.git#readme",
   "dependencies": {
     "commander": "^12.0.0",
     "dotenv": "^16.4.5",
